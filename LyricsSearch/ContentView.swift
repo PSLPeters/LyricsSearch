@@ -73,17 +73,20 @@ struct ContentView: View {
                         .replacingOccurrences(of: isHellCensored ? "Hell" : "+++", with: "****", options: .caseInsensitive)
                         .replacingOccurrences(of: isShitCensored ? "Shit" : "+++", with: "****", options: .caseInsensitive)
                 }) {
-                    HStack {
-                        Button {
-                            isShowingCurseWordSheet = false
-                        } label: {
-                            Text("Close")
-                        }
-                        .padding(.leading, 15)
-                        .padding(.top, 15)
-                        Spacer()
-                        Text("Curse Word Options")
-                        Spacer()
+                     ZStack {
+                         HStack {
+                             Button {
+                                 isShowingCurseWordSheet = false
+                             } label: {
+                                 Text("Close")
+                             }
+                             .padding([.leading, .top])
+                             Spacer()
+                         }
+                         HStack {
+                             Text("Curse Word Options")
+                             .padding(.top)
+                            }
                     }
                     Spacer()
                     Form {
