@@ -91,6 +91,20 @@ struct ContentView: View {
                     Spacer()
                     Form {
                         Section("Select which curse words to censor:") {
+                            HStack {
+                                Text("Options")
+                                Spacer()
+                                Divider()
+                                Button {
+                                    isAssCensored = false
+                                    isDamnCensored = false
+                                    isFuckCensored = false
+                                    isHellCensored = false
+                                    isShitCensored = false
+                                } label: {
+                                    Text("Deselect All")
+                                }
+                            }
                             Toggle("Ass", isOn: $isAssCensored)
                             Toggle("Damn", isOn: $isDamnCensored)
                             Toggle("Fuck", isOn: $isFuckCensored)
