@@ -17,7 +17,17 @@ struct ContentView: View {
     @State private var lyricsModified = ""
     @State private var searchedArtist = ""
     @State private var searchedSong = ""
+    
     @State private var isShowingCurseWordSheet = false
+    
+    @State private var isShowingCurseWordSheetLongPressAlert = false
+    @State private var isShowingCopyLyricsLongPressAlert = false
+    @State private var isShowingColorSchemeLongPressAlert = false
+    @State private var isShowingSiriReaderLongPressAlert = false
+    @State private var isShowingLoadLyricsLongPressAlert = false
+    @State private var isShowingSelectAllCurseWordsLongPressAlert = false
+    @State private var isShowingDeselectAllCurseWordsLongPressAlert = false
+    
     @State private var isLyricsTextCopied = false
     
     @AppStorage("artist") var artist = ""
@@ -34,39 +44,71 @@ struct ContentView: View {
     var body: some View {
         VStack {
             HStack {
-                Button {
-                    isDarkModeOn.toggle()
-                } label: {
+                Button(action: {}
+                       , label: {
                     let image = isDarkModeOn ? "lightbulb" : "lightbulb.fill"
                     Image(systemName: image)
+                })
+                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
+                    isShowingColorSchemeLongPressAlert = true
+                    PetersHaptics.process.impact(.heavy)
+                })
+                .simultaneousGesture(TapGesture().onEnded {
+                    isDarkModeOn.toggle()
+                })
+                .alert(isPresented: $isShowingColorSchemeLongPressAlert) {
+                    Alert(title: Text("Toggle Color Scheme"),
+                          message: Text("Tap here to toggle between light and dark mode."))
                 }
-                .padding(.leading, 15)
+                .padding(.leading, 20)
                 .padding(.trailing, 15)
-                Button {
+                
+                Button(action: {}
+                       , label: {
+                    let image = isSiriOn ? "waveform.circle.fill" : "waveform.circle"
+                    Image(systemName: image)
+                })
+                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
+                    isShowingSiriReaderLongPressAlert = true
+                    PetersHaptics.process.impact(.heavy)
+                })
+                .simultaneousGesture(TapGesture().onEnded {
                     isSiriOn.toggle()
                     if isSiriOn == false
                     {
                         lyricsReader.stopReading()
                     }
-                } label: {
-                    let image = isSiriOn ? "waveform.circle.fill" : "waveform.circle"
-                    Image(systemName: image)
+                })
+                .alert(isPresented: $isShowingSiriReaderLongPressAlert) {
+                    Alert(title: Text("Toggle Siri Singing"),
+                          message: Text("Tap here to toggle Siri singing the loaded lyrics on or off. Tap mid-singing to stop that song."))
                 }
                 Spacer()
                 Text("Peters Lyrics")
                     .font(.title)
                     .bold()
                 Spacer()
-                Button {
-                    isShowingCurseWordSheet = true
-                } label: {
+                Button(action: {}
+                       , label: {
                     Text("&@!$#")
+                })
+                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35)
+                    .onEnded { _ in
+                        isShowingCurseWordSheetLongPressAlert = true
+                        PetersHaptics.process.impact(.heavy)
+                })
+                .simultaneousGesture(TapGesture()
+                    .onEnded {
+                        isShowingCurseWordSheet = true
+                })
+                .alert(isPresented: $isShowingCurseWordSheetLongPressAlert) {
+                    Alert(title: Text("Curse Word Options"),
+                          message: Text("Tap here to select which curse words to censor."))
                 }
                 .padding(.trailing, 15)
                 .sheet(isPresented: $isShowingCurseWordSheet, onDismiss: {
                     lyricsModified = lyrics
-                        .replacingOccurrences(of: "\(searchedSong) par \(searchedArtist)", with: "", options: .caseInsensitive)
-                        .replacingOccurrences(of: "Paroles de la chanson ", with: "")
+                        .replacingOccurrences(of: "\n\n", with: "\n")
                         .replacingOccurrences(of: isAssCensored ? "Ass" : "+++", with: "***", options: .caseInsensitive)
                         .replacingOccurrences(of: isDamnCensored ? "Damn" : "+++", with: "****", options: .caseInsensitive)
                         .replacingOccurrences(of: isFuckCensored ? "Fuck" : "+++", with: "****", options: .caseInsensitive)
@@ -95,21 +137,56 @@ struct ContentView: View {
                                 Text("Options")
                                 Spacer()
                                 Divider()
-                                Button {
+                                Button(action: {}
+                                       , label: {
+                                    Text("Select All")
+                                })
+                                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
+                                    isShowingSelectAllCurseWordsLongPressAlert = true
+                                    PetersHaptics.process.impact(.heavy)
+                                })
+                                .simultaneousGesture(TapGesture().onEnded {
+                                    isAssCensored = true
+                                    isDamnCensored = true
+                                    isFuckCensored = true
+                                    isHellCensored = true
+                                    isShitCensored = true
+                                })
+                                .alert(isPresented: $isShowingSelectAllCurseWordsLongPressAlert) {
+                                    Alert(title: Text("Select All Curse Words"),
+                                          message: Text("Tap to Select all curse words selected below."))
+                                }
+                                Divider()
+                                Button(action: {}
+                                       , label: {
+                                    Text("Deselect All")
+                                })
+                                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
+                                    isShowingDeselectAllCurseWordsLongPressAlert = true
+                                    PetersHaptics.process.impact(.heavy)
+                                })
+                                .simultaneousGesture(TapGesture().onEnded {
                                     isAssCensored = false
                                     isDamnCensored = false
                                     isFuckCensored = false
                                     isHellCensored = false
                                     isShitCensored = false
-                                } label: {
-                                    Text("Deselect All")
+                                })
+                                .alert(isPresented: $isShowingDeselectAllCurseWordsLongPressAlert) {
+                                    Alert(title: Text("Deselect All Curse Words"),
+                                          message: Text("Tap to deselect all curse words selected below."))
                                 }
                             }
                             Toggle("Ass", isOn: $isAssCensored)
+                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
                             Toggle("Damn", isOn: $isDamnCensored)
+                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
                             Toggle("Fuck", isOn: $isFuckCensored)
+                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
                             Toggle("Hell", isOn: $isHellCensored)
+                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
                             Toggle("Shit", isOn: $isShitCensored)
+                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
                         }
                             Section("Lyrics provided by:") {
                                 Link("https://lyricsovh.docs.apiary.io",
@@ -120,7 +197,7 @@ struct ContentView: View {
             }
             HStack {
                 Text("Artist:")
-                TextField("Artist", text: $artist)
+                TextField("Artist", text: $artist).autocapitalization(.words)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
             }
             .padding(.leading, 10)
@@ -128,25 +205,37 @@ struct ContentView: View {
             HStack {
                 Text("Song:")
                     .padding(.trailing, 1)
-                TextField("Song", text: $song)
+                TextField("Song", text: $song).autocapitalization(.words)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
             }
             .padding(.leading, 10)
             .padding(.trailing, 10)
             Divider()
+                .padding(.top, 5)
+                .padding(.bottom, 5)
             HStack {
                 Text("Lyrics:")
                 Spacer()
-                Button(action: {
+                Button(action: {}
+                       , label: {
+                    Text(isLyricsTextCopied ? "Copied!" : "Copy Lyrics")
+                })
+                .simultaneousGesture(LongPressGesture(minimumDuration: 0.5).onEnded { _ in
+                    isShowingCopyLyricsLongPressAlert = true
+                })
+                .simultaneousGesture(TapGesture().onEnded {
                     UIPasteboard.general.string = lyricsModified
                     isLyricsTextCopied = true
-                }, label: {
-                    Text(isLyricsTextCopied ? "Copied!" : "Copy All")
                 })
+                .alert(isPresented: $isShowingCopyLyricsLongPressAlert) {
+                    Alert(title: Text("Copy Lyrics"),
+                          message: Text("Tap to copy the current lyrics to the iOS clipboard."))
+                }
                 .disabled(lyricsModified.isEmpty || isLyricsTextCopied)
             }
             .padding(.leading, 10)
             .padding(.trailing, 10)
+            Divider()
             ScrollView {
                 TextField("",
                           text: $lyricsModified,
@@ -169,7 +258,18 @@ struct ContentView: View {
                         })
             }
         }
-        Button {
+        Divider()
+        Button(action: {}
+               , label: {
+            Image(systemName: "music.quarternote.3")
+            Text("Load Lyrics")
+            Image(systemName: "music.quarternote.3")
+        })
+        .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
+            isShowingLoadLyricsLongPressAlert = true
+            PetersHaptics.process.impact(.heavy)
+        })
+        .simultaneousGesture(TapGesture().onEnded {
             Task {
                 lyricsReader.stopReading()
                 let artistEdit = removeSpecialCharsFromString(text: artist).replacingOccurrences(of: " ", with: "%20")
@@ -182,8 +282,7 @@ struct ContentView: View {
                 lyrics = decodedResponse?.lyrics ?? ""
                 
                 lyricsModified = lyrics
-                    .replacingOccurrences(of: "\(searchedSong) par \(searchedArtist)", with: "", options: .caseInsensitive)
-                    .replacingOccurrences(of: "Paroles de la chanson ", with: "")
+                    .replacingOccurrences(of: "\n\n", with: "\n")
                     .replacingOccurrences(of: isAssCensored ? "Ass" : "+++", with: "***", options: .caseInsensitive)
                     .replacingOccurrences(of: isDamnCensored ? "Damn" : "+++", with: "****", options: .caseInsensitive)
                     .replacingOccurrences(of: isFuckCensored ? "Fuck" : "+++", with: "****", options: .caseInsensitive)
@@ -195,10 +294,10 @@ struct ContentView: View {
                 }
                 isLyricsTextCopied = false
             }
-        } label: {
-            Image(systemName: "music.quarternote.3")
-            Text("Load Lyrics")
-            Image(systemName: "music.quarternote.3")
+        })
+        .alert(isPresented: $isShowingLoadLyricsLongPressAlert) {
+            Alert(title: Text("Load Lyrics"),
+                  message: Text("Tap to load the lyrics for the entered Artist - Song combination."))
         }
         .padding(.top, 10)
         
@@ -214,6 +313,21 @@ func removeSpecialCharsFromString(text: String) -> String {
     let okayChars = Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890+-=().!_")
     return text.filter {okayChars.contains($0) }
 }
+
+class PetersHaptics {
+    static let process = PetersHaptics()
+    
+    private init() { }
+    
+    func impact(_ feedbackStyle: UIImpactFeedbackGenerator.FeedbackStyle) {
+        UIImpactFeedbackGenerator(style: feedbackStyle).impactOccurred()
+    }
+    
+    func notification(_ feedbackType: UINotificationFeedbackGenerator.FeedbackType) {
+        UINotificationFeedbackGenerator().notificationOccurred(feedbackType)
+    }
+}
+
 
 // A robot generated this code
 class LyricsReader {
