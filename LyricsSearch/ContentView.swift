@@ -92,8 +92,7 @@ struct ContentView: View {
                        , label: {
                     Text("&@!$#")
                 })
-                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35)
-                    .onEnded { _ in
+                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
                         isShowingCurseWordSheetLongPressAlert = true
                         PetersHaptics.process.impact(.heavy)
                 })
@@ -220,8 +219,9 @@ struct ContentView: View {
                        , label: {
                     Text(isLyricsTextCopied ? "Copied!" : "Copy Lyrics")
                 })
-                .simultaneousGesture(LongPressGesture(minimumDuration: 0.5).onEnded { _ in
+                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
                     isShowingCopyLyricsLongPressAlert = true
+                    PetersHaptics.process.impact(.heavy)
                 })
                 .simultaneousGesture(TapGesture().onEnded {
                     UIPasteboard.general.string = lyricsModified
