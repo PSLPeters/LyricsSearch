@@ -48,6 +48,7 @@ struct ContentView: View {
                        , label: {
                     let image = isDarkModeOn ? "lightbulb" : "lightbulb.fill"
                     Image(systemName: image)
+                        .imageScale(.large)
                 })
                 .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
                     isShowingColorSchemeLongPressAlert = true
@@ -67,6 +68,7 @@ struct ContentView: View {
                        , label: {
                     let image = isSiriOn ? "waveform.circle.fill" : "waveform.circle"
                     Image(systemName: image)
+                        .imageScale(.large)
                 })
                 .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
                     isShowingSiriReaderLongPressAlert = true
@@ -114,84 +116,10 @@ struct ContentView: View {
                         .replacingOccurrences(of: isHellCensored ? "Hell" : "+++", with: "****", options: .caseInsensitive)
                         .replacingOccurrences(of: isShitCensored ? "Shit" : "+++", with: "****", options: .caseInsensitive)
                 }) {
-                     ZStack {
-                         HStack {
-                             Button {
-                                 isShowingCurseWordSheet = false
-                             } label: {
-                                 Text("Close")
-                             }
-                             .padding([.leading, .top])
-                             Spacer()
-                         }
-                         HStack {
-                             Text("Curse Word Options")
-                             .padding(.top)
-                            }
-                    }
-                    Spacer()
-                    Form {
-                        Section("Select which curse words to censor:") {
-                            HStack {
-                                Text("Options")
-                                Spacer()
-                                Divider()
-                                Button(action: {}
-                                       , label: {
-                                    Text("Select All")
-                                })
-                                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
-                                    isShowingSelectAllCurseWordsLongPressAlert = true
-                                    PetersHaptics.process.impact(.heavy)
-                                })
-                                .simultaneousGesture(TapGesture().onEnded {
-                                    isAssCensored = true
-                                    isDamnCensored = true
-                                    isFuckCensored = true
-                                    isHellCensored = true
-                                    isShitCensored = true
-                                })
-                                .alert(isPresented: $isShowingSelectAllCurseWordsLongPressAlert) {
-                                    Alert(title: Text("Select All Curse Words"),
-                                          message: Text("Tap to Select all curse words selected below."))
-                                }
-                                Divider()
-                                Button(action: {}
-                                       , label: {
-                                    Text("Deselect All")
-                                })
-                                .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
-                                    isShowingDeselectAllCurseWordsLongPressAlert = true
-                                    PetersHaptics.process.impact(.heavy)
-                                })
-                                .simultaneousGesture(TapGesture().onEnded {
-                                    isAssCensored = false
-                                    isDamnCensored = false
-                                    isFuckCensored = false
-                                    isHellCensored = false
-                                    isShitCensored = false
-                                })
-                                .alert(isPresented: $isShowingDeselectAllCurseWordsLongPressAlert) {
-                                    Alert(title: Text("Deselect All Curse Words"),
-                                          message: Text("Tap to deselect all curse words selected below."))
-                                }
-                            }
-                            Toggle("Ass", isOn: $isAssCensored)
-                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
-                            Toggle("Damn", isOn: $isDamnCensored)
-                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
-                            Toggle("Fuck", isOn: $isFuckCensored)
-                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
-                            Toggle("Hell", isOn: $isHellCensored)
-                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
-                            Toggle("Shit", isOn: $isShitCensored)
-                                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
-                        }
-                            Section("Lyrics provided by:") {
-                                Link("https://lyricsovh.docs.apiary.io",
-                                     destination: URL(string: "https://lyricsovh.docs.apiary.io/#reference/0/lyrics-of-a-song/search")!)
-                            }
-                    }
+                    CurseWordSheet(isShowingCurseWordSheet: $isShowingCurseWordSheet,
+                                   isShowingCurseWordSheetLongPressAlert: $isShowingCurseWordSheet,
+                                   isShowingSelectAllCurseWordsLongPressAlert: $isShowingSelectAllCurseWordsLongPressAlert,
+                                   isShowingDeselectAllCurseWordsLongPressAlert: $isShowingDeselectAllCurseWordsLongPressAlert)
                 }
             }
             HStack {
