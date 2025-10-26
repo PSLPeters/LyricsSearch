@@ -164,7 +164,6 @@ struct ContentView: View {
                         Alert(title: Text("Curse Word Options"),
                               message: Text("Tap here to select which curse words to censor."))
                     }
-                    .padding(.trailing, 15)
                     .sheet(isPresented: $isShowingCurseWordSheet) {
                         CurseWordSheet(isShowingCurseWordSheet: $isShowingCurseWordSheet,
                                        isShowingCurseWordSheetLongPressAlert: $isShowingCurseWordSheet,
