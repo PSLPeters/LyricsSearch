@@ -112,7 +112,6 @@ struct ContentView: View {
                            , label: {
                         let image = isDarkModeOn ? "lightbulb" : "lightbulb.fill"
                         Image(systemName: image)
-                            .imageScale(.large)
                     })
                     .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
                         isShowingColorSchemeLongPressAlert = true
@@ -129,7 +128,6 @@ struct ContentView: View {
                            , label: {
                         let image = isSiriOn ? "waveform.circle.fill" : "waveform.circle"
                         Image(systemName: image)
-                            .imageScale(.large)
                     })
                     .simultaneousGesture(LongPressGesture(minimumDuration: 0.35).onEnded { _ in
                         isShowingSiriReaderLongPressAlert = true

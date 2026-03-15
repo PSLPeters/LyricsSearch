@@ -143,11 +143,11 @@ struct CurseWordSheet: View {
             .navigationTitle("Curse Word Options")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItemGroup(placement: .topBarLeading) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
                     Button {
                         isShowingCurseWordSheet = false
                     } label: {
-                        Text("Close")
+                        Image(systemName: "xmark")
                     }
                 }
             }
